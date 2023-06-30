@@ -1,9 +1,16 @@
 import { useState } from 'react';
 import { Notify } from 'notiflix';
-import { Button, Input, FormWrapper } from './Form.styled';
 import { useSelector, useDispatch } from 'react-redux';
 import { addContact } from 'redux/Operations';
 import { Selectitems } from 'redux/Selectors';
+
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+
 
 export const FormHooks= () => {
   const dispatch = useDispatch();
@@ -24,12 +31,12 @@ export const FormHooks= () => {
     }
   };
 
-  const handleFormSubmit = event => {
+  const handleSubmit = event => {
     event.preventDefault();
 
     const contact = {
       name: name,
-      phone: number
+      number: number
     };
 
     const alreadyExists = contacts.findIndex(item => {
@@ -50,31 +57,51 @@ export const FormHooks= () => {
   };
 
   return (
-   <form onSubmit={handleFormSubmit}>
-<FormWrapper>
-            <label htmlFor="name">Name
-          <Input
-  type="text"
-      name="name"
-      value={name}
-      onChange={handleInputChange}
-  pattern= "^[A-Za-z\u0080-\uFFFF ']+$"
-  title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-                            required />
-                    </label>
-                     <label htmlFor="number">Number
-                <Input
-                  type="tel"
-                  name="number"
-                  value={number}
-                  onChange={handleInputChange}
-  pattern="^(\+?[0-9.\(\)\-\s]*)$"
-  title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-  required
-/></label>
-        <Button type="submit">Add Contact</Button>
-          </FormWrapper>
-          
-    </form>
-      )
+<Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="name"
+              label="Name"
+              name="name"
+            autoComplete="Name"
+            value={name}
+            autoFocus
+            onChange={handleInputChange}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="number"
+              label="Number"
+              type="Number"
+              id="Number"
+              value={number}
+            autoComplete="Number"
+            onChange={handleInputChange}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Add Contact
+            </Button>
+          </Box>
+        </Box>
+      </Container>      
+)
 }
