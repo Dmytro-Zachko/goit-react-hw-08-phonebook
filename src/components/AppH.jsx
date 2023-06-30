@@ -5,6 +5,8 @@ import LoadingSpiner from "./LoadingSpiner/LoadingSpiner";
 import Layout from "./Layout/Layout";
 import { fetchCurrentUser } from "redux/auth/auth-operations";
 import PrivateRoute from "./PrivateRoute";
+import PublicRoute from "./PublicRoute";
+import { getRefreshUser } from "redux/auth/auth-selectors";
 
 
 const HomePage = lazy(() => import('../pages/Home'))
@@ -15,6 +17,7 @@ const LoginPage = lazy(() => import('../pages/Login'))
 
 const AppH = () => {
   const dispatch = useDispatch()
+  const isRefreshing = useSelector(getRefreshUser)
 
 
     useEffect(() => {
@@ -22,27 +25,23 @@ const AppH = () => {
   },[dispatch])
 
   return (
-<Suspense fallback={<LoadingSpiner />}>
+    <>
+      {isRefreshing ? (<p>Refreshing User...</p>) : (
+        <Suspense fallback={<LoadingSpiner/>}>
           <Routes>
-            <Route path="/" element={<Layout />}>
+            <Route path="/" element={<Layout/>} >
               <Route index element={<HomePage />} />
-
-              <Route
-                path="/register"
-                element={
-                 <RegisterPage />
-                }
-              />
-
-              <Route
-                path="/login"
-                element={<LoginPage/>}
-              />
-
-          <Route path="/contacts" element={<ContactsPage/>} />
+              <Route path="/register" element={
+                <PublicRoute redirectTo="/contacts" component={<RegisterPage />} />} />
+              <Route path="/login" element={
+                <PublicRoute redirectTo="/contacts" component={<LoginPage />} />} /> 
+              <Route path="/contacts" element={
+                <PrivateRoute redirectTo="/login" component={<ContactsPage />} />} /> 
             </Route>
-          </Routes>
+        </Routes>
         </Suspense>
+    )}
+    </>
   )
 }
 
