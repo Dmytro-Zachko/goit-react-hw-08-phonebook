@@ -74,6 +74,7 @@ export const FormHooks= () => {
 /></label>
         <Button type="submit">Add Contact</Button>
           </FormWrapper>
-          </form>
+          
+    </form>
       )
 }
